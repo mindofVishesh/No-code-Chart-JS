@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chart.js Prompt Generator</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+    }
+    textarea, select, button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+    }
+    pre {
+      background: #f3f3f3;
+      padding: 10px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Chart.js Prompt Generator (Flexible Format)</h2>
+
+  <label>Chart Type:</label>
+  <select id="chartType">
+    <option value="bar">Bar</option>
+    <option value="line">Line</option>
+    <option value="pie">Pie</option>
+    <option value="doughnut">Doughnut</option>
+  </select>
+
+  <label>Chart Data (any structured format — JSON, table, CSV, etc.):</label>
+  <textarea id="chartData" rows="10" placeholder='Example inputs:
+CSV:
+Quarter,Revenue
+Q1,5000
+Q2,7000
+Q3,4000
+Q4,6000
+
+OR
+
+JSON:
+{
+  "labels": ["Q1", "Q2", "Q3", "Q4"],
+  "datasets": [{
+    "label": "Revenue",
+    "data": [5000, 7000, 4000, 6000]
+  }]
+}
+'></textarea>
+
+  <button onclick="generatePrompt()">Generate Prompt</button>
+
+  <h3>Generated Prompt for ChatGPT:</h3>
+  <pre id="generatedPrompt">Click "Generate Prompt" to see it here...</pre>
+
+  <script>
+    function generatePrompt() {
+      const chartType = document.getElementById('chartType').value;
+      const rawData = document.getElementById('chartData').value.trim();
+
+      const prompt = `
+You are a helpful assistant that creates Chart.js chart configurations.
+
+The user will provide:
+1. A chart type (bar, line, pie, etc.)
+2. Structured data — which may be in JSON, CSV, or tabular format.
+
+Your task:
+- Interpret the data
+- Choose sensible labels, colors, and titles if missing
+- Output ONLY a valid Chart.js configuration object (not wrapped in markdown or with any extra commentary)
+
+Chart Type: ${chartType}
+Data:
+${rawData}
+      `.trim();
+
+      console.log("🔧 Prompt for ChatGPT:\n\n" + prompt);
+      document.getElementById("generatedPrompt").textContent = prompt;
+    }
+  </script>
+
+</body>
+</html>
